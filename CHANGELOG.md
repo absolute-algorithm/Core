@@ -10,3 +10,4 @@ All notable changes to this project will be documented in this file.
 - Serialization utilities for JSON, XML, and compression.
 - Security utilities for hashing, encryption, and privacy.
 - Sanitization tools for file names and spreadsheet formulas.
+- Resilience utilities for retry, circuit breaker, and timeout policies.
