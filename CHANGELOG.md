@@ -11,3 +11,4 @@ All notable changes to this project will be documented in this file.
 - Security utilities for hashing, encryption, and privacy.
 - Sanitization tools for file names and spreadsheet formulas.
 - Resilience utilities for retry, circuit breaker, and timeout policies.
+- Generic percentage calculation utilities in Numerics/Percentage.cs using .NET generic math interfaces (INumber/IFloatingPoint).

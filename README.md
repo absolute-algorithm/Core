@@ -38,12 +38,14 @@ The following section describes the main classes and their functions in each of 
 - **HttpRequestUtility**: Methods to create and send HTTP requests (including JSON/form requests), and helpers for common HTTP verbs.
 - **RequestSignature**: Methods to generate timestamps, compute and verify request signatures.
 
+
 ### Numerics
 
 - **Geometry**: Math helpers for interpolation, aspect ratio, area/volume calculations, and distance in 2D/3D.
 - **Randomness**: Thread-safe random number generation, picking random items, and probability checks.
 - **Statistics**: Statistical functions (mean, median, variance, standard deviation, range).
 - **UniversalConverter**: Unit conversion utilities for length, liquid, mass, data, time, frequency, and temperature.
+- **Percentage**: Generic percentage calculation utilities using .NET generic math (INumber/IFloatingPoint). Includes methods for calculating a percentage of a value, what percent one value is of another, increasing/decreasing by a percentage, and percentage difference.
 
 ### Resilience
 
