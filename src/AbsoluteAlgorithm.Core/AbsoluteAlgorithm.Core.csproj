@@ -23,6 +23,10 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
 
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+    <DeterministicSourcePaths>true</DeterministicSourcePaths>
+    <Optimize>true</Optimize>
+
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -48,14 +52,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
     <PackageReference Include="NLog" Version="6.1.1" />
     <PackageReference Include="Polly" Version="8.6.6" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Diagnostics/" />
-    <Folder Include="Extensions/" />
-    <Folder Include="Resilience/" />
   </ItemGroup>
 </Project>
