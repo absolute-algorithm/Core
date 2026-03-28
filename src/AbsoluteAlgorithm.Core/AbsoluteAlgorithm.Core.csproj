@@ -31,7 +31,8 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
 
-    <Description>Core library for AbsoluteAlgorithm applications. Provides utilities for API versioning, authentication, resilience, storage, and more.</Description>
+    <Description>Core library for AbsoluteAlgorithm applications. Provides utilities for API
+      versioning, authentication, resilience, storage, and more.</Description>
     <PackageTags>
       aspnetcore;dotnet;AbsoluteAlgorithm;WebAPI;Blazor;Unity;Stride;Avalonia;Uno;Maui;RazorPages;MVC</PackageTags>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
@@ -48,5 +49,13 @@
 
   <ItemGroup>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
+    <PackageReference Include="NLog" Version="6.1.1" />
+    <PackageReference Include="Polly" Version="8.6.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Diagnostics/" />
+    <Folder Include="Extensions/" />
+    <Folder Include="Resilience/" />
   </ItemGroup>
 </Project>

@@ -61,4 +61,37 @@ public static class DateTimes
     {
         return DateTimeOffset.FromUnixTimeSeconds(unixTimeSeconds).UtcDateTime;
     }
+
+    /// <summary>
+    /// Calculates the absolute start and end of a date range.
+    /// If only 'from' is provided: Spans from 00:00:00 to 23:59:59 of that day.
+    /// If 'from' and 'to' are provided: Spans from 00:00:00 of the first date to 23:59:59 of the second date.
+    /// </summary>
+    /// <param name="from">The starting date.</param>
+    /// <param name="to">The ending date (optional).</param>
+    /// <returns>A tuple with the normalized UTC range.</returns>
+    public static (DateTime From, DateTime To) CalculateRange(DateTime from, DateTime? to = null)
+    {
+        DateTime fromDate = StartOfDayUtc(from);
+
+        DateTime toDate;
+        if (to == null || to.Value == DateTime.MinValue || to.Value.Date == from.Date)
+        {
+            toDate = EndOfDayUtc(from);
+        }
+        else
+        {
+            toDate = EndOfDayUtc(to.Value);
+        }
+
+        if (fromDate > toDate)
+        {
+            if (to.HasValue)
+            {
+                (fromDate, toDate) = (StartOfDayUtc(to.Value), EndOfDayUtc(from));
+            }
+        }
+
+        return (fromDate, toDate);
+    }
 }

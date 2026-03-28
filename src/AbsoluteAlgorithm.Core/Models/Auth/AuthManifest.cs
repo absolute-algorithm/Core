@@ -33,7 +33,7 @@ public class AuthManifest
     /// Gets a value indicating whether API key authentication via request headers is enabled.
     /// </summary>
     /// <remarks>
-    /// When enabled, the <see cref="Filters.AuthorizeKeyAttribute"/> can be used on controllers and actions
+    /// When enabled can be used on controllers and actions
     /// to validate a request header against one or more environment variable secrets.
     /// </remarks>
     [JsonPropertyName("enableApiKeyAuth")]

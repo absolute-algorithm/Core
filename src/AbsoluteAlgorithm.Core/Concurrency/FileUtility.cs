@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.StaticFiles;
 
 namespace AbsoluteAlgorithm.Core.Concurrency;
 
-// <summary>
+/// <summary>
 /// Provides helper methods for file names, content types, sizes, and stream reads.
 /// </summary>
 public static class FileUtility
