@@ -15,6 +15,12 @@ public class LoggingConfiguration
     public bool EnableLogging { get; init; } = true;
 
     /// <summary>
+    /// If true, the logger will capture and log the full HTTP request and response bodies for API calls. Use with caution in production environments due to potential performance impacts and sensitive data exposure. use PII redaction features to mitigate risks.
+    /// </summary>
+    [JsonPropertyName("enableRequestAndResponseLogging")]
+    public bool EnableRequestAndResponseLogging { get; init; } = false;
+
+    /// <summary>
     /// If true, the logger will scan strings and objects for PII and mask them before writing to NLog.
     /// </summary>
     [JsonPropertyName("enablePiiRedaction")]
