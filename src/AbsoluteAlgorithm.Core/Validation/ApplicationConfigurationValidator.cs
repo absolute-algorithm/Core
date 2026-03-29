@@ -28,6 +28,7 @@ public static class ApplicationConfigurationValidator
         ValidateRateLimits(configuration, errors);
         ValidateIdempotency(configuration, errors);
         ValidateWebhookPolicies(configuration, errors);
+        ValidateLoggingConfiguration(configuration, errors);
 
         if (errors.Count > 0)
         {
@@ -463,6 +464,20 @@ public static class ApplicationConfigurationValidator
             {
                 errors.Add($"Webhook signature policy '{policy.Name}' must use a non-negative allowedClockSkewSeconds value.");
             }
+        }
+    }
+
+    private static void ValidateLoggingConfiguration(ApplicationConfiguration configuration, List<string> errors)
+    {
+        if(configuration.LoggingConfiguration is null)
+        {
+            return;
+        }
+
+        if (configuration.LoggingConfiguration.EnablePiiRedaction &&
+            (configuration.LoggingConfiguration.RedactedProperties == null || !configuration.LoggingConfiguration.RedactedProperties.Any()))
+        {
+            errors.Add("EnablePiiRedaction is true, but RedactedProperties is empty or null. Please provide at least one property to redact.");
         }
     }
 
