@@ -1,12 +1,10 @@
 using System;
 using System.Text.Json.Serialization;
 using AbsoluteAlgorithm.Core.Models.Auth;
-using AbsoluteAlgorithm.Core.Models.Configuration;
 using AbsoluteAlgorithm.Core.Models.Database;
 using AbsoluteAlgorithm.Core.Models.Documentation;
 using AbsoluteAlgorithm.Core.Models.Http;
 using AbsoluteAlgorithm.Core.Models.Idempotency;
-using AbsoluteAlgorithm.Core.Models.Pagination;
 using AbsoluteAlgorithm.Core.Models.RateLimit;
 using AbsoluteAlgorithm.Core.Models.Storage;
 using AbsoluteAlgorithm.Core.Models.Webhooks;
@@ -15,34 +13,31 @@ namespace AbsoluteAlgorithm.Core.Models.Configuration;
 
 /// <summary>
 /// Represents the top-level configuration used to enable and configure library features.
+/// Implements the Singleton design pattern.
 /// </summary>
 public class ApplicationConfiguration
 {
-    // --- Relational DB ---
+    private static readonly Lazy<ApplicationConfiguration> _instance = new(() => new ApplicationConfiguration());
+
     /// <summary>
-    /// Gets a value indicating whether relational database services and middleware are enabled.
+    /// Gets the singleton instance of the ApplicationConfiguration.
     /// </summary>
-    [JsonPropertyName("enableRelationalDatabase")]
-    public bool EnableRelationalDatabase { get; init; } = false;
+    public static ApplicationConfiguration Instance => _instance.Value;
+
+    // Private constructor to prevent external instantiation
+    private ApplicationConfiguration() { }
 
     /// <summary>
     /// Gets the database policies to register.
     /// </summary>
     [JsonPropertyName("databasePolicies")]
-    public List<DatabasePolicy>? DatabasePolicies { get; init; }
-
-    // --- Storage ---
-    /// <summary>
-    /// Gets a value indicating whether object storage services are enabled.
-    /// </summary>
-    [JsonPropertyName("enableStorage")]
-    public bool EnableStorage { get; init; } = false;
+    public List<DatabasePolicy>? DatabasePolicies { get; set; }
 
     /// <summary>
     /// Gets the storage policies to register.
     /// </summary>
     [JsonPropertyName("storagePolicies")]
-    public List<StoragePolicy>? StoragePolicies { get; init; }
+    public List<StoragePolicy>? StoragePolicies { get; set; }
 
     // --- HttpClient ---
 
@@ -50,95 +45,50 @@ public class ApplicationConfiguration
     /// Gets the named HTTP client policies to register.
     /// </summary>
     [JsonPropertyName("httpClientPolicies")]
-    public List<HttpClientPolicy>? HttpClientPolicies { get; init; }
-
-    /// <summary>
-    /// Gets a value indicating whether API versioning is enabled.
-    /// </summary>
-    [JsonPropertyName("enableApiVersioning")]
-    public bool EnableApiVersioning { get; init; } = false;
+    public List<HttpClientPolicy>? HttpClientPolicies { get; set; }
 
     /// <summary>
     /// Gets the API versioning configuration.
     /// </summary>
     [JsonPropertyName("apiVersioningPolicy")]
-    public ApiVersioningPolicy? ApiVersioningPolicy { get; init; }
-
-    /// <summary>
-    /// Gets a value indicating whether Swagger and OpenAPI endpoints are enabled.
-    /// </summary>
-    [JsonPropertyName("enableSwagger")]
-    public bool EnableSwagger { get; init; } = false;
+    public ApiVersioningPolicy? ApiVersioningPolicy { get; set; }
 
     /// <summary>
     /// Gets the Swagger and OpenAPI documentation configuration.
     /// </summary>
     [JsonPropertyName("swaggerPolicy")]
-    public SwaggerPolicy? SwaggerPolicy { get; init; }
-
-
-    /// <summary>
-    /// Gets a value indicating whether request idempotency is enabled.
-    /// </summary>
-    [JsonPropertyName("enableIdempotency")]
-    public bool EnableIdempotency { get; init; } = false;
+    public SwaggerPolicy? SwaggerPolicy { get; set; }
 
     /// <summary>
     /// Gets the request idempotency configuration.
     /// </summary>
     [JsonPropertyName("idempotencyPolicy")]
-    public IdempotencyPolicy? IdempotencyPolicy { get; init; }
+    public IdempotencyPolicy? IdempotencyPolicy { get; set; }
 
     // --- Auth Sections ---
-
-    /// <summary>
-    /// Gets a value indicating whether authentication services are enabled.
-    /// </summary>
-    [JsonPropertyName("configureAuthentication")]
-    public bool ConfigureAuthentication { get; init; } = false;
-
-    /// <summary>
-    /// Gets a value indicating whether authorization services are enabled.
-    /// </summary>
-    [JsonPropertyName("configureAuthorization")]
-    public bool ConfigureAuthorization { get; init; } = false;
-
     /// <summary>
     /// Gets the authentication and authorization manifest.
     /// </summary>
     [JsonPropertyName("authManifest")]
-    public AuthManifest? AuthManifest { get; init; }
-
-    /// <summary>
-    /// Gets a value indicating whether webhook signature validation is enabled.
-    /// </summary>
-    [JsonPropertyName("enableWebhookSignatureValidation")]
-    public bool EnableWebhookSignatureValidation { get; init; } = false;
+    public AuthManifest? AuthManifest { get; set; }
 
     /// <summary>
     /// Gets the webhook signature validation policies.
     /// </summary>
     [JsonPropertyName("webhookSignaturePolicies")]
-    public List<WebhookSignaturePolicy>? WebhookSignaturePolicies { get; init; }
+    public List<WebhookSignaturePolicy>? WebhookSignaturePolicies { get; set; }
 
     // --- RateLimit ---
-
-    /// <summary>
-    /// Gets a value indicating whether rate limiting is enabled.
-    /// </summary>
-    [JsonPropertyName("enableRateLimit")]
-    public bool EnableRateLimit { get; init; } = false;
-
     /// <summary>
     /// Gets the rate-limit policies to register.
     /// </summary>
     [JsonPropertyName("rateLimitPolicies")]
-    public List<RateLimitPolicy>? RateLimitPolicies { get; init; }
+    public List<RateLimitPolicy>? RateLimitPolicies { get; set; }
 
 
     /// <summary>
     /// Gets a value indicating whether health endpoints are enabled.
     /// </summary>
     [JsonPropertyName("enableHealthChecks")]
-    public bool EnableHealthChecks { get; init; } = true;
+    public bool EnableHealthChecks { get; set; } = true;
 }

@@ -30,16 +30,6 @@ public class AuthManifest
     public bool EnableCsrfProtection { get; init; } = false;
 
     /// <summary>
-    /// Gets a value indicating whether API key authentication via request headers is enabled.
-    /// </summary>
-    /// <remarks>
-    /// When enabled, the <see cref="Filters.AuthorizeKeyAttribute"/> can be used on controllers and actions
-    /// to validate a request header against one or more environment variable secrets.
-    /// </remarks>
-    [JsonPropertyName("enableApiKeyAuth")]
-    public bool EnableApiKeyAuth { get; init; } = false;
-
-    /// <summary>
     /// Gets the authorization policies to register.
     /// </summary>
     [JsonPropertyName("policies")]

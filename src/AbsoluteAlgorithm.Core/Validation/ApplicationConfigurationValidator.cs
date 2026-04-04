@@ -13,7 +13,7 @@ public static class ApplicationConfigurationValidator
     /// Validates the supplied application configuration and throws when the configuration is invalid.
     /// </summary>
     /// <param name="configuration">The application configuration to validate.</param>
-    public static void ValidateOrThrow(ApplicationConfiguration configuration)
+    public static void ValidateAndThrow(ApplicationConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(configuration);
 
@@ -37,14 +37,8 @@ public static class ApplicationConfigurationValidator
 
     private static void ValidateDatabasePolicies(ApplicationConfiguration configuration, List<string> errors)
     {
-        if (!configuration.EnableRelationalDatabase)
+        if (configuration.DatabasePolicies is null || !configuration.DatabasePolicies.Any())
         {
-            return;
-        }
-
-        if (configuration.DatabasePolicies is null || configuration.DatabasePolicies.Count == 0)
-        {
-            errors.Add("UseRelationalDatabase is enabled but no database policies were provided.");
             return;
         }
 
@@ -90,14 +84,8 @@ public static class ApplicationConfigurationValidator
 
     private static void ValidateStoragePolicies(ApplicationConfiguration configuration, List<string> errors)
     {
-        if (!configuration.EnableStorage)
+        if (configuration.StoragePolicies is null || !configuration.StoragePolicies.Any())
         {
-            return;
-        }
-
-        if (configuration.StoragePolicies is null || configuration.StoragePolicies.Count == 0)
-        {
-            errors.Add("UseStorage is enabled but no storage policies were provided.");
             return;
         }
 
@@ -136,7 +124,7 @@ public static class ApplicationConfigurationValidator
 
     private static void ValidateHttpClientPolicies(ApplicationConfiguration configuration, List<string> errors)
     {
-        if (configuration.HttpClientPolicies is null || configuration.HttpClientPolicies.Count == 0)
+        if (configuration.HttpClientPolicies is null || !configuration.HttpClientPolicies.Any())
         {
             return;
         }
@@ -169,59 +157,59 @@ public static class ApplicationConfigurationValidator
 
     private static void ValidateAuthentication(ApplicationConfiguration configuration, List<string> errors)
     {
-        if (configuration.ConfigureAuthentication)
+
+        if (configuration.AuthManifest is null || configuration.AuthManifest?.Policies is null || !configuration.AuthManifest.Policies.Any())
         {
-            var authManifest = configuration.AuthManifest;
-            var enableJwt = authManifest?.EnableJwt ?? true;
-            var enableCookies = authManifest?.EnableCookies ?? true;
+            return;
+        }
 
-            if (!enableJwt && !enableCookies)
-            {
-                errors.Add("Authentication configuration must enable at least one of JWT or cookie authentication.");
-            }
+        var authManifest = configuration.AuthManifest;
+        var enableJwt = authManifest?.EnableJwt ?? true;
+        var enableCookies = authManifest?.EnableCookies ?? true;
 
-            if (enableJwt)
-            {
-                var secret = Environment.GetEnvironmentVariable("JWT_SECRET");
-                if (string.IsNullOrWhiteSpace(secret) || secret.Length < 32)
-                {
-                    errors.Add("JWT authentication requires JWT_SECRET to be present and at least 32 characters long.");
-                }
-            }
+        if (!enableJwt && !enableCookies)
+        {
+            errors.Add("Authentication configuration must enable at least one of JWT or cookie authentication.");
+        }
 
-            if (authManifest?.EnableCsrfProtection == true && !enableCookies)
+        if (enableJwt)
+        {
+            var secret = Environment.GetEnvironmentVariable("JWT_SECRET");
+            if (string.IsNullOrWhiteSpace(secret) || secret.Length < 32)
             {
-                errors.Add("CSRF protection can only be enabled when cookie authentication is enabled.");
+                errors.Add("JWT authentication requires JWT_SECRET to be present and at least 32 characters long.");
             }
         }
 
-        if (configuration.ConfigureAuthorization && configuration.AuthManifest?.Policies is not null)
+        if (authManifest?.EnableCsrfProtection == true && !enableCookies)
         {
-            var policyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var policy in configuration.AuthManifest.Policies)
-            {
-                if (string.IsNullOrWhiteSpace(policy.PolicyName))
-                {
-                    errors.Add("Authorization policies must define a non-empty policyName.");
-                    continue;
-                }
+            errors.Add("CSRF protection can only be enabled when cookie authentication is enabled.");
+        }
 
-                if (!policyNames.Add(policy.PolicyName))
-                {
-                    errors.Add($"Duplicate authorization policy name '{policy.PolicyName}'.");
-                }
+        var policyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var policy in configuration.AuthManifest.Policies)
+        {
+            if (string.IsNullOrWhiteSpace(policy.PolicyName))
+            {
+                errors.Add("Authorization policies must define a non-empty policyName.");
+                continue;
+            }
+
+            if (!policyNames.Add(policy.PolicyName))
+            {
+                errors.Add($"Duplicate authorization policy name '{policy.PolicyName}'.");
             }
         }
     }
 
     private static void ValidateApiVersioning(ApplicationConfiguration configuration, List<string> errors)
     {
-        if (!configuration.EnableApiVersioning)
+        if (configuration.ApiVersioningPolicy is null)
         {
             return;
         }
 
-        var policy = configuration.ApiVersioningPolicy ?? throw new InvalidOperationException("ApiVersioningPolicy must be provided when API versioning is enabled.");
+        var policy = configuration.ApiVersioningPolicy;
 
         if (policy.DefaultMajorVersion < 0)
         {
@@ -264,12 +252,12 @@ public static class ApplicationConfigurationValidator
 
     private static void ValidateSwagger(ApplicationConfiguration configuration, List<string> errors)
     {
-        if (!configuration.EnableSwagger)
+        if (configuration.SwaggerPolicy is null)
         {
             return;
         }
 
-        var policy = configuration.SwaggerPolicy ?? throw new InvalidOperationException("SwaggerPolicy must be provided when Swagger is enabled.");
+        var policy = configuration.SwaggerPolicy;
 
         if (string.IsNullOrWhiteSpace(policy.Title))
         {
@@ -304,9 +292,9 @@ public static class ApplicationConfigurationValidator
                 break;
 
             case Enums.SwaggerDocumentMode.PerApiVersion:
-                if (!configuration.EnableApiVersioning)
+                if (configuration.ApiVersioningPolicy is null)
                 {
-                    errors.Add("SwaggerPolicy per-api-version mode requires API versioning to be enabled.");
+                    errors.Add("SwaggerPolicy per-api-version mode requires API versioning.");
                 }
 
                 if (policy.Documents.Count == 0)
@@ -361,14 +349,8 @@ public static class ApplicationConfigurationValidator
 
     private static void ValidateRateLimits(ApplicationConfiguration configuration, List<string> errors)
     {
-        if (!configuration.EnableRateLimit)
+        if (configuration.RateLimitPolicies is null || !configuration.RateLimitPolicies.Any())
         {
-            return;
-        }
-
-        if (configuration.RateLimitPolicies is null || configuration.RateLimitPolicies.Count == 0)
-        {
-            errors.Add("RateLimit is enabled but no rate-limit policies were provided.");
             return;
         }
 
@@ -398,12 +380,12 @@ public static class ApplicationConfigurationValidator
 
     private static void ValidateIdempotency(ApplicationConfiguration configuration, List<string> errors)
     {
-        if (!configuration.EnableIdempotency)
+        if (configuration.IdempotencyPolicy is null)
         {
             return;
         }
 
-        var policy = configuration.IdempotencyPolicy ?? throw new InvalidOperationException("IdempotencyPolicy must be provided when idempotency is enabled.");
+        var policy = configuration.IdempotencyPolicy;
 
         if (string.IsNullOrWhiteSpace(policy.HeaderName))
         {
@@ -428,7 +410,7 @@ public static class ApplicationConfigurationValidator
 
     private static void ValidateWebhookPolicies(ApplicationConfiguration configuration, List<string> errors)
     {
-        if (!configuration.EnableWebhookSignatureValidation || configuration.WebhookSignaturePolicies is null || configuration.WebhookSignaturePolicies.Count == 0)
+        if (configuration.WebhookSignaturePolicies is null || !configuration.WebhookSignaturePolicies.Any())
         {
             return;
         }
