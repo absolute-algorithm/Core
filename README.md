@@ -3,6 +3,8 @@
 **AbsoluteAlgorithm.Core** is a versatile core library designed to support a wide range of applications. It provides essential utilities and infrastructure for building robust and scalable applications.
 
 ## Features
+- **Builder Pattern**: Simplifies the creation of `ApplicationConfiguration` using the `ApplicationConfigurationBuilder`.
+- **Singleton Design**: Ensures a single instance of `ApplicationConfiguration` throughout the application lifecycle.
 - **API Versioning**: Simplifies version management for APIs.
 - **Authentication Utilities**: Tools for secure authentication and token management.
 - **Resilience Utilities**: Implements retry policies, rate limiting, and other resilience patterns.
@@ -11,84 +13,30 @@
 - **Security**: Hashing, encryption, and privacy utilities.
 - **Sanitization**: Tools for sanitizing file names and spreadsheet formulas.
 
-## Folder and Utility Overview
+## Usage
 
-The following section describes the main classes and their functions in each of the core folders:
+### Creating an ApplicationConfiguration Instance
 
-### Common
+To create an instance of `ApplicationConfiguration`, use the `ApplicationConfigurationBuilder`. Direct instantiation of `ApplicationConfiguration` is not allowed as it follows the Singleton design pattern.
 
-- **DateTimes**: Utility methods for working with `DateTime` (e.g., `EnsureUtc`, `StartOfDayUtc`, `EndOfDayUtc`, Unix time conversions, and range calculations).
-- **Enums**: Helpers for enum parsing, name/value retrieval, and validation (`Parse`, `TryParse`, `GetNames`, `GetValues`, `IsDefined`).
-- **TypeExtensions**: Reflection helpers for getting public/readable/writable properties of types.
+#### Using the Builder Pattern (Recommended)
+```csharp
+var configuration = new ApplicationConfigurationBuilder()
+    .WithDatabasePolicies(databasePolicies)
+    .WithStoragePolicies(storagePolicies)
+    .WithHttpClientPolicies(httpClientPolicies)
+    .WithApiVersioningPolicy(apiVersioningPolicy)
+    .WithSwaggerPolicy(swaggerPolicy)
+    .WithIdempotencyPolicy(idempotencyPolicy)
+    .WithAuthManifest(authManifest)
+    .WithWebhookSignaturePolicies(webhookPolicies)
+    .WithRateLimitPolicies(rateLimitPolicies)
+    .EnableHealthChecks(true)
+    .Build();
+```
 
-### Concurrency
-
-- **OptimisticConcurrencyUtility**: Methods for creating version tokens and ETags from row versions, timestamps, and for checking matches.
-- **ETagUtility**: Methods to create strong/weak ETags from strings, bytes, or objects, and to apply ETags to HTTP responses.
-- **FileUtility**: File-related helpers (get extension, file name, content type, format size, read all bytes/text from streams).
-
-### Extensions
-
-- **StringExtensions**: Extension methods for strings (truncate, convert to snake/kebab/pascal case, check palindrome).
-
-### Networking
-
-- **Connectivity**: Method to ping a host and check connectivity.
-- **HttpUtility**: Helpers to extract headers, bearer tokens, client IP, correlation ID, tenant ID, and idempotency key from HTTP requests/contexts.
-- **HttpRequestUtility**: Methods to create and send HTTP requests (including JSON/form requests), and helpers for common HTTP verbs.
-- **RequestSignature**: Methods to generate timestamps, compute and verify request signatures.
-
-
-### Numerics
-
-- **Geometry**: Math helpers for interpolation, aspect ratio, area/volume calculations, and distance in 2D/3D.
-- **Randomness**: Thread-safe random number generation, picking random items, and probability checks.
-- **Statistics**: Statistical functions (mean, median, variance, standard deviation, range).
-- **UniversalConverter**: Unit conversion utilities for length, liquid, mass, data, time, frequency, and temperature.
-- **Percentage**: Generic percentage calculation utilities using .NET generic math (INumber/IFloatingPoint). Includes methods for calculating a percentage of a value, what percent one value is of another, increasing/decreasing by a percentage, and percentage difference.
-
-### Resilience
-
-- **ResiliencePolicyFactory**: Factory for creating async resilience policies (retry, circuit breaker, timeout) using Polly.
-
-### Sanitizers
-
-- **FileNameSanitizer**: Methods to sanitize file names and get safe file extensions.
-- **SpreadsheetFormulaSanitizer**: Methods to sanitize spreadsheet cell formulas and check if sanitization is required.
-- **SpreadsheetFormulaSanitizingStringModelBinder/Provider**: ASP.NET model binders for sanitizing spreadsheet formulas in string inputs.
-- **SpreadsheetFormulaSanitizingStringJsonConverter**: JSON converter for sanitizing spreadsheet formulas.
-
-### Security
-
-- **Asymmetric**: Methods for generating asymmetric key pairs, private/public keys, and extracting public keys from private keys.
-- **Hashing**: Methods for computing hashes (SHA256, SHA512, etc.) from strings, bytes, streams, and base64.
-- **Identity**: Helpers for working with claims, user IDs, emails, roles, and creating claims/identities/principals.
-- **Password**: Methods for hashing and verifying passwords.
-- **Privacy**: Methods for masking sensitive information, detecting PII, and masking properties in JSON/objects.
-- **Symmetric**: Methods for symmetric key generation, encryption, and decryption (string and byte array).
-- **Token**: Methods for generating tokens, refresh tokens, one-time tokens, API keys, and symmetric keys.
-
-### Serialization
-
-- **Compression**: Methods for compressing/decompressing data using Gzip and Brotli.
-- **Json**: Helpers for JSON serialization/deserialization and formatting.
-- **Xml**: Helpers for XML serialization/deserialization and formatting.
-
----
-
-## Getting Started
-1. Install the package via NuGet:
-   ```bash
-   dotnet add package AbsoluteAlgorithm.Core
-   ```
-2. Add the necessary namespaces to your project.
-3. Start using the utilities provided by the library.
-
-
-## Sample Application Configuration
-
-Below is a sample configuration for `ApplicationConfiguration` demonstrating how to set up databases, storage, rate limiting, API versioning, Swagger, authentication, and more:
-
+#### Direct Instantiation (Deprecated)
+Although direct instantiation is deprecated, here is an example for reference:
 ```csharp
 ApplicationConfiguration appConfig = new ApplicationConfiguration
 {
@@ -248,6 +196,105 @@ ApplicationConfiguration appConfig = new ApplicationConfiguration
         IgnoredLoggers = new List<string> { "SignalRHeartbeat" }
     },
 };
+```
+
+> **Note**: Direct instantiation bypasses the Singleton enforcement and is not recommended for production use.
+
+### Key Benefits of the Builder Pattern
+- **Readability**: The builder pattern makes the configuration process more intuitive and readable.
+- **Flexibility**: Allows selective configuration of only the required components.
+- **Singleton Enforcement**: Ensures that the `ApplicationConfiguration` instance is consistent and shared across the application.
+
+## Folder and Utility Overview
+
+The following section describes the main classes and their functions in each of the core folders:
+
+### Common
+
+- **DateTimes**: Utility methods for working with `DateTime` (e.g., `EnsureUtc`, `StartOfDayUtc`, `EndOfDayUtc`, Unix time conversions, and range calculations).
+- **Enums**: Helpers for enum parsing, name/value retrieval, and validation (`Parse`, `TryParse`, `GetNames`, `GetValues`, `IsDefined`).
+- **TypeExtensions**: Reflection helpers for getting public/readable/writable properties of types.
+
+### Concurrency
+
+- **OptimisticConcurrencyUtility**: Methods for creating version tokens and ETags from row versions, timestamps, and for checking matches.
+- **ETagUtility**: Methods to create strong/weak ETags from strings, bytes, or objects, and to apply ETags to HTTP responses.
+- **FileUtility**: File-related helpers (get extension, file name, content type, format size, read all bytes/text from streams).
+
+### Extensions
+
+- **StringExtensions**: Extension methods for strings (truncate, convert to snake/kebab/pascal case, check palindrome).
+
+### Networking
+
+- **Connectivity**: Method to ping a host and check connectivity.
+- **HttpUtility**: Helpers to extract headers, bearer tokens, client IP, correlation ID, tenant ID, and idempotency key from HTTP requests/contexts.
+- **HttpRequestUtility**: Methods to create and send HTTP requests (including JSON/form requests), and helpers for common HTTP verbs.
+- **RequestSignature**: Methods to generate timestamps, compute and verify request signatures.
+
+### Numerics
+
+- **Geometry**: Math helpers for interpolation, aspect ratio, area/volume calculations, and distance in 2D/3D.
+- **Randomness**: Thread-safe random number generation, picking random items, and probability checks.
+- **Statistics**: Statistical functions (mean, median, variance, standard deviation, range).
+- **UniversalConverter**: Unit conversion utilities for length, liquid, mass, data, time, frequency, and temperature.
+- **Percentage**: Generic percentage calculation utilities using .NET generic math (INumber/IFloatingPoint). Includes methods for calculating a percentage of a value, what percent one value is of another, increasing/decreasing by a percentage, and percentage difference.
+
+### Resilience
+
+- **ResiliencePolicyFactory**: Factory for creating async resilience policies (retry, circuit breaker, timeout) using Polly.
+
+### Sanitizers
+
+- **FileNameSanitizer**: Methods to sanitize file names and get safe file extensions.
+- **SpreadsheetFormulaSanitizer**: Methods to sanitize spreadsheet cell formulas and check if sanitization is required.
+- **SpreadsheetFormulaSanitizingStringModelBinder/Provider**: ASP.NET model binders for sanitizing spreadsheet formulas in string inputs.
+- **SpreadsheetFormulaSanitizingStringJsonConverter**: JSON converter for sanitizing spreadsheet formulas.
+
+### Security
+
+- **Asymmetric**: Methods for generating asymmetric key pairs, private/public keys, and extracting public keys from private keys.
+- **Hashing**: Methods for computing hashes (SHA256, SHA512, etc.) from strings, bytes, streams, and base64.
+- **Identity**: Helpers for working with claims, user IDs, emails, roles, and creating claims/identities/principals.
+- **Password**: Methods for hashing and verifying passwords.
+- **Privacy**: Methods for masking sensitive information, detecting PII, and masking properties in JSON/objects.
+- **Symmetric**: Methods for symmetric key generation, encryption, and decryption (string and byte array).
+- **Token**: Methods for generating tokens, refresh tokens, one-time tokens, API keys, and symmetric keys.
+
+### Serialization
+
+- **Compression**: Methods for compressing/decompressing data using Gzip and Brotli.
+- **Json**: Helpers for JSON serialization/deserialization and formatting.
+- **Xml**: Helpers for XML serialization/deserialization and formatting.
+
+---
+
+## Getting Started
+1. Install the package via NuGet:
+   ```bash
+   dotnet add package AbsoluteAlgorithm.Core
+   ```
+2. Add the necessary namespaces to your project.
+3. Start using the utilities provided by the library.
+
+
+## Sample Application Configuration
+
+Below is a sample configuration for `ApplicationConfiguration` demonstrating how to set up databases, storage, rate limiting, API versioning, Swagger, authentication, and more:
+
+```csharp
+ApplicationConfiguration appConfig = new ApplicationConfigurationBuilder()
+    .WithDatabasePolicies(databasePolicies)
+    .WithStoragePolicies(storagePolicies)
+    .WithHttpClientPolicies(httpClientPolicies)
+    .WithApiVersioningPolicy(apiVersioningPolicy)
+    .WithSwaggerPolicy(swaggerPolicy)
+    .WithIdempotencyPolicy(idempotencyPolicy)
+    .WithAuthManifest(authManifest)
+    .WithWebhookSignaturePolicies(webhookPolicies)
+    .WithRateLimitPolicies(rateLimitPolicies)
+    .EnableHealthChecks(true)
+    .Build();
 ```
 
 ## License

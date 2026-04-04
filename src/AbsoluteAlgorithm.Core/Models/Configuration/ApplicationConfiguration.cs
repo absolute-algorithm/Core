@@ -91,4 +91,10 @@ public class ApplicationConfiguration
     /// </summary>
     [JsonPropertyName("enableHealthChecks")]
     public bool EnableHealthChecks { get; set; } = true;
+
+    /// <summary>
+    /// Gets the request/response logging configuration.
+    /// </summary>
+    [JsonPropertyName("loggingConfiguration")]
+    public LoggingConfiguration? LoggingConfiguration { get; set; }
 }

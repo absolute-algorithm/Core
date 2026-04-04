@@ -26,6 +26,7 @@ public class ApplicationConfigurationBuilder
     private List<WebhookSignaturePolicy>? _webhookSignaturePolicies;
     private List<RateLimitPolicy>? _rateLimitPolicies;
     private bool _enableHealthChecks = true;
+    private LoggingConfiguration? _loggingConfiguration;
 
     /// <summary>
     /// Sets the database policies for the application.
@@ -188,6 +189,17 @@ public class ApplicationConfigurationBuilder
     }
 
     /// <summary>
+    /// Sets the logging configuration for the application.
+    /// </summary>
+    /// <param name="loggingConfiguration">The logging configuration.</param>
+    /// <returns>The current instance of ApplicationConfigurationBuilder.</returns>
+    public ApplicationConfigurationBuilder WithLoggingConfiguration(LoggingConfiguration loggingConfiguration)
+    {
+        _loggingConfiguration = loggingConfiguration;
+        return this;
+    }
+
+    /// <summary>
     /// Builds and returns the singleton instance of ApplicationConfiguration.
     /// </summary>
     /// <returns>The singleton instance of ApplicationConfiguration.</returns>
@@ -205,6 +217,7 @@ public class ApplicationConfigurationBuilder
         instance.WebhookSignaturePolicies = _webhookSignaturePolicies;
         instance.RateLimitPolicies = _rateLimitPolicies;
         instance.EnableHealthChecks = _enableHealthChecks;
+        instance.LoggingConfiguration = _loggingConfiguration;
 
         return instance;
     }
