@@ -8,7 +8,7 @@
     <PackageId>AbsoluteAlgorithm.Core</PackageId>
     <AssemblyName>AbsoluteAlgorithm.Core</AssemblyName>
     <RootNamespace>AbsoluteAlgorithm.Core</RootNamespace>
-    <Version>1.0.1</Version>
+    <Version>1.0.0</Version>
     <Authors>S Lalith Prasad</Authors>
     <Company>AbsoluteAlgorithm</Company>
     <Copyright>Copyright © 2026 AbsoluteAlgorithm. All Rights Reserved.</Copyright>
@@ -31,7 +31,8 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
 
-    <Description>Core library for AbsoluteAlgorithm applications. Provides utilities for API versioning, authentication, resilience, storage, and more.</Description>
+    <Description>Core library for AbsoluteAlgorithm applications. Provides utilities for API
+      versioning, authentication, resilience, storage, and more.</Description>
     <PackageTags>
       aspnetcore;dotnet;AbsoluteAlgorithm;WebAPI;Blazor;Unity;Stride;Avalonia;Uno;Maui;RazorPages;MVC</PackageTags>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
@@ -45,7 +46,7 @@
     <None Include="../../README.md" Pack="true" PackagePath="/" />
     <None Include="../../LICENSE.txt" Pack="true" PackagePath="/" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
   </ItemGroup>
