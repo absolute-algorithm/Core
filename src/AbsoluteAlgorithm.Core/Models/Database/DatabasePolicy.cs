@@ -19,7 +19,7 @@ public class DatabasePolicy
     /// Gets the database provider.
     /// </summary>
     [JsonPropertyName("databaseProvider")]
-    public DatabaseProvider DatabaseProvider { get; init; }
+    public RelationalDatabaseProvider DatabaseProvider { get; init; }
 
     /// <summary>
     /// Gets the name of the environment variable that contains the connection string.

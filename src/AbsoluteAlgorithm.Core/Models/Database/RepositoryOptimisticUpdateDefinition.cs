@@ -1,7 +1,7 @@
 namespace AbsoluteAlgorithm.Core.Models.Database;
 
 /// <summary>
-/// Describes the SQL statements required to perform an optimistic-concurrency update through Database Repository>.
+/// Describes the SQL statements required to perform an optimistic-concurrency update.
 /// </summary>
 public class RepositoryOptimisticUpdateDefinition
 {
