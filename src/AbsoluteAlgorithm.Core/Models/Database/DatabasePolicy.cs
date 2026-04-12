@@ -16,10 +16,16 @@ public class DatabasePolicy
     public string Name { get; init; } = null!;
 
     /// <summary>
+    ///  Gets the database category.
+    /// </summary>
+    [JsonPropertyName("databaseKind")]
+    public DatabaseKind DatabaseKind { get; init; }
+
+    /// <summary>
     /// Gets the database provider.
     /// </summary>
     [JsonPropertyName("databaseProvider")]
-    public RelationalDatabaseProvider DatabaseProvider { get; init; }
+    public DatabaseProvider DatabaseProvider { get; init; }
 
     /// <summary>
     /// Gets the name of the environment variable that contains the connection string.
