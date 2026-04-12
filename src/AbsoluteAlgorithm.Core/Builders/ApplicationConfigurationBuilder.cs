@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using AbsoluteAlgorithm.Core.Models.Configuration;
 using AbsoluteAlgorithm.Core.Models.Auth;
+using AbsoluteAlgorithm.Core.Models.Caching;
 using AbsoluteAlgorithm.Core.Models.Database;
 using AbsoluteAlgorithm.Core.Models.Documentation;
 using AbsoluteAlgorithm.Core.Models.Http;
@@ -22,6 +23,7 @@ public class ApplicationConfigurationBuilder
     private ApiVersioningPolicy? _apiVersioningPolicy;
     private SwaggerPolicy? _swaggerPolicy;
     private IdempotencyPolicy? _idempotencyPolicy;
+    private CachingPolicy? _cachingPolicy;
     private AuthManifest? _authManifest;
     private List<WebhookSignaturePolicy>? _webhookSignaturePolicies;
     private List<RateLimitPolicy>? _rateLimitPolicies;
@@ -125,6 +127,17 @@ public class ApplicationConfigurationBuilder
     }
 
     /// <summary>
+    /// Sets the shared caching policy for the application.
+    /// </summary>
+    /// <param name="policy">The caching policy.</param>
+    /// <returns>The current instance of ApplicationConfigurationBuilder.</returns>
+    public ApplicationConfigurationBuilder WithCachingPolicy(CachingPolicy policy)
+    {
+        _cachingPolicy = policy;
+        return this;
+    }
+
+    /// <summary>
     /// Sets the authentication manifest for the application.
     /// </summary>
     /// <param name="manifest">The authentication manifest.</param>
@@ -213,6 +226,7 @@ public class ApplicationConfigurationBuilder
         instance.ApiVersioningPolicy = _apiVersioningPolicy;
         instance.SwaggerPolicy = _swaggerPolicy;
         instance.IdempotencyPolicy = _idempotencyPolicy;
+        instance.CachingPolicy = _cachingPolicy;
         instance.AuthManifest = _authManifest;
         instance.WebhookSignaturePolicies = _webhookSignaturePolicies;
         instance.RateLimitPolicies = _rateLimitPolicies;

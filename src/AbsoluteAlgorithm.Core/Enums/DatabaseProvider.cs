@@ -1,9 +1,9 @@
 namespace AbsoluteAlgorithm.Core.Enums;
 
 /// <summary>
-/// Specifies the relational database provider.
+/// Specifies the database provider.
 /// </summary>
-public enum RelationalDatabaseProvider : byte
+public enum DatabaseProvider : byte
 {
     /// <summary>
     /// PostgreSQL.
@@ -16,7 +16,7 @@ public enum RelationalDatabaseProvider : byte
     MSSQL,
 
     /// <summary>
-    /// MySQL.
+    /// MongoDB.
     /// </summary>
-    MySQL
+    MongoDb
 }

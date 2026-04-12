@@ -9,6 +9,7 @@
 - **Authentication Utilities**: Tools for secure authentication and token management.
 - **Resilience Utilities**: Implements retry policies, rate limiting, and other resilience patterns.
 - **Storage Providers**: Abstractions for various storage mechanisms.
+- **Caching**: Configurable application caching policy with in-memory cache primitives and idempotency cache store support.
 - **Serialization**: JSON, XML, and compression utilities.
 - **Security**: Hashing, encryption, and privacy utilities.
 - **Sanitization**: Tools for sanitizing file names and spreadsheet formulas.
@@ -28,6 +29,7 @@ var configuration = new ApplicationConfigurationBuilder()
     .WithApiVersioningPolicy(apiVersioningPolicy)
     .WithSwaggerPolicy(swaggerPolicy)
     .WithIdempotencyPolicy(idempotencyPolicy)
+    .WithCachingPolicy(cachingPolicy)
     .WithAuthManifest(authManifest)
     .WithWebhookSignaturePolicies(webhookPolicies)
     .WithRateLimitPolicies(rateLimitPolicies)
@@ -290,6 +292,7 @@ ApplicationConfiguration appConfig = new ApplicationConfigurationBuilder()
     .WithApiVersioningPolicy(apiVersioningPolicy)
     .WithSwaggerPolicy(swaggerPolicy)
     .WithIdempotencyPolicy(idempotencyPolicy)
+    .WithCachingPolicy(cachingPolicy)
     .WithAuthManifest(authManifest)
     .WithWebhookSignaturePolicies(webhookPolicies)
     .WithRateLimitPolicies(rateLimitPolicies)
