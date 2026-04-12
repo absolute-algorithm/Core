@@ -1,4 +1,5 @@
 using AbsoluteAlgorithm.Core.Models.Configuration;
+using AbsoluteAlgorithm.Core.Models.Caching;
 using AbsoluteAlgorithm.Core.Models.Documentation;
 using AbsoluteAlgorithm.Core.Models.Resilience;
 
@@ -27,6 +28,7 @@ public static class ApplicationConfigurationValidator
         ValidateAuthentication(configuration, errors);
         ValidateRateLimits(configuration, errors);
         ValidateIdempotency(configuration, errors);
+        ValidateCachingPolicy(configuration, errors);
         ValidateWebhookPolicies(configuration, errors);
         ValidateLoggingConfiguration(configuration, errors);
 
@@ -409,6 +411,77 @@ public static class ApplicationConfigurationValidator
         }
     }
 
+    private static void ValidateCachingPolicy(ApplicationConfiguration configuration, List<string> errors)
+    {
+        if (configuration.CachingPolicy is null)
+        {
+            return;
+        }
+
+        var policy = configuration.CachingPolicy;
+
+        if (policy.DefaultAbsoluteExpirationSeconds <= 0)
+        {
+            errors.Add("CachingPolicy must use a defaultAbsoluteExpirationSeconds value greater than zero.");
+        }
+
+        if (policy.DefaultSlidingExpirationSeconds is <= 0)
+        {
+            errors.Add("CachingPolicy must use a positive defaultSlidingExpirationSeconds value when provided.");
+        }
+
+        if (policy.Scope != Enums.CacheScope.LocalMemory)
+        {
+            errors.Add("CachingPolicy currently supports only LocalMemory scope.");
+        }
+
+        if (policy.Provider != Enums.CacheProvider.Memory)
+        {
+            errors.Add("CachingPolicy currently supports only Memory provider.");
+        }
+
+        if (!string.IsNullOrWhiteSpace(policy.ConnectionStringName)
+            && string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(policy.ConnectionStringName)))
+        {
+            errors.Add($"CachingPolicy references missing environment variable '{policy.ConnectionStringName}'.");
+        }
+
+        if (policy.EntryPolicies.Count == 0)
+        {
+            return;
+        }
+
+        var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var entry in policy.EntryPolicies)
+        {
+            ValidateCacheEntryPolicy(entry, names, errors);
+        }
+    }
+
+    private static void ValidateCacheEntryPolicy(CacheEntryPolicy entry, HashSet<string> names, List<string> errors)
+    {
+        if (string.IsNullOrWhiteSpace(entry.Name))
+        {
+            errors.Add("Each cache entry policy must define a non-empty name.");
+            return;
+        }
+
+        if (!names.Add(entry.Name))
+        {
+            errors.Add($"Duplicate cache entry policy name '{entry.Name}'.");
+        }
+
+        if (entry.AbsoluteExpirationSeconds <= 0)
+        {
+            errors.Add($"Cache entry policy '{entry.Name}' must use an absoluteExpirationSeconds value greater than zero.");
+        }
+
+        if (entry.SlidingExpirationSeconds is <= 0)
+        {
+            errors.Add($"Cache entry policy '{entry.Name}' must use a positive slidingExpirationSeconds value when provided.");
+        }
+    }
+
     private static void ValidateWebhookPolicies(ApplicationConfiguration configuration, List<string> errors)
     {
         if (configuration.WebhookSignaturePolicies is null || !configuration.WebhookSignaturePolicies.Any())
@@ -451,7 +524,7 @@ public static class ApplicationConfigurationValidator
 
     private static void ValidateLoggingConfiguration(ApplicationConfiguration configuration, List<string> errors)
     {
-        if(configuration.LoggingConfiguration is null)
+        if (configuration.LoggingConfiguration is null)
         {
             return;
         }

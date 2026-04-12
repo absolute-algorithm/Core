@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2026-04-12
+### Added
+- Added MongoDB and DatabaseKind
+- Added first-class caching configuration via CachingPolicy and CacheEntryPolicy.
+- Added cache enums for provider and scope selection.
+- Added in-memory cache abstraction and implementation for library feature caching.
+- Added idempotency cache store abstraction backed by the application cache.
+- Added dependency-injection extension method for registering caching services.
+
+### Changed
+- Extended ApplicationConfiguration and ApplicationConfigurationBuilder with caching policy support.
+- Extended ApplicationConfigurationValidator with caching policy validation rules.
+
 ## [1.0.0] - 2026-03-28
 ### Added
 - Initial release of **AbsoluteAlgorithm.Core**.

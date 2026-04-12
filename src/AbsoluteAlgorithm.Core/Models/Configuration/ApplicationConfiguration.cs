@@ -1,6 +1,7 @@
 using System;
 using System.Text.Json.Serialization;
 using AbsoluteAlgorithm.Core.Models.Auth;
+using AbsoluteAlgorithm.Core.Models.Caching;
 using AbsoluteAlgorithm.Core.Models.Database;
 using AbsoluteAlgorithm.Core.Models.Documentation;
 using AbsoluteAlgorithm.Core.Models.Http;
@@ -64,6 +65,12 @@ public class ApplicationConfiguration
     /// </summary>
     [JsonPropertyName("idempotencyPolicy")]
     public IdempotencyPolicy? IdempotencyPolicy { get; set; }
+
+    /// <summary>
+    /// Gets the shared caching configuration for library features.
+    /// </summary>
+    [JsonPropertyName("cachingPolicy")]
+    public CachingPolicy? CachingPolicy { get; set; }
 
     // --- Auth Sections ---
     /// <summary>
