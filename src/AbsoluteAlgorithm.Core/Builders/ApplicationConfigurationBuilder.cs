@@ -28,6 +28,7 @@ public class ApplicationConfigurationBuilder
     private List<WebhookSignaturePolicy>? _webhookSignaturePolicies;
     private List<RateLimitPolicy>? _rateLimitPolicies;
     private bool _enableHealthChecks = true;
+    private bool _enableRazorPages;
     private LoggingConfiguration? _loggingConfiguration;
 
     /// <summary>
@@ -202,6 +203,17 @@ public class ApplicationConfigurationBuilder
     }
 
     /// <summary>
+    /// Enables or disables Razor Pages.
+    /// </summary>
+    /// <param name="enable">True to enable Razor Pages, false to disable.</param>
+    /// <returns>The current instance of ApplicationConfigurationBuilder.</returns>
+    public ApplicationConfigurationBuilder EnableRazorPages(bool enable)
+    {
+        _enableRazorPages = enable;
+        return this;
+    }
+
+    /// <summary>
     /// Sets the logging configuration for the application.
     /// </summary>
     /// <param name="loggingConfiguration">The logging configuration.</param>
@@ -231,6 +243,7 @@ public class ApplicationConfigurationBuilder
         instance.WebhookSignaturePolicies = _webhookSignaturePolicies;
         instance.RateLimitPolicies = _rateLimitPolicies;
         instance.EnableHealthChecks = _enableHealthChecks;
+        instance.EnableRazorPages = _enableRazorPages;
         instance.LoggingConfiguration = _loggingConfiguration;
 
         return instance;
