@@ -100,6 +100,12 @@ public class ApplicationConfiguration
     public bool EnableHealthChecks { get; set; } = true;
 
     /// <summary>
+    /// Gets a value indicating whether Razor Pages is enabled.
+    /// </summary>
+    [JsonPropertyName("enableRazorPages")]
+    public bool EnableRazorPages { get; set; } = false;
+
+    /// <summary>
     /// Gets the request/response logging configuration.
     /// </summary>
     [JsonPropertyName("loggingConfiguration")]
