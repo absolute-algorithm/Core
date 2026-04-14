@@ -8,7 +8,7 @@
     <PackageId>AbsoluteAlgorithm.Core</PackageId>
     <AssemblyName>AbsoluteAlgorithm.Core</AssemblyName>
     <RootNamespace>AbsoluteAlgorithm.Core</RootNamespace>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Authors>S Lalith Prasad</Authors>
     <Company>AbsoluteAlgorithm</Company>
     <Copyright>Copyright © 2026 AbsoluteAlgorithm. All Rights Reserved.</Copyright>
